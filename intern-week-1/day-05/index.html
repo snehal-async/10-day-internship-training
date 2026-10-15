@@ -1,0 +1,293 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Employee Management Dashboard | Day 05</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="dashboard-layout">
+    <!-- Main Content Area -->
+    <main class="main-content">
+      <!-- Top Navigation / Header -->
+      <header class="dashboard-header">
+        <div class="header-branding">
+          <div class="brand-icon">👥</div>
+          <div>
+            <h1 class="brand-title">Employee Management Dashboard</h1>
+            <p class="brand-subtitle">Staff directory, operational analytics & talent records</p>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <button id="btn-reset-data" class="btn btn-secondary" title="Restore default 22 sample records">
+            <span class="icon">🔄</span> Reset Demo Data
+          </button>
+          <button id="btn-add-employee" class="btn btn-primary">
+            <span class="icon">➕</span> Add Employee
+          </button>
+        </div>
+      </header>
+
+      <!-- KPI Metric Summary Cards -->
+      <section class="summary-cards" aria-label="Overview Statistics">
+        <div class="card stat-card card-total">
+          <div class="stat-info">
+            <span class="stat-label">Total Employees</span>
+            <span id="stat-total" class="stat-value">0</span>
+          </div>
+          <div class="stat-icon">👥</div>
+        </div>
+
+        <div class="card stat-card card-active">
+          <div class="stat-info">
+            <span class="stat-label">Active Staff</span>
+            <span id="stat-active" class="stat-value">0</span>
+          </div>
+          <div class="stat-icon">🟢</div>
+        </div>
+
+        <div class="card stat-card card-inactive">
+          <div class="stat-info">
+            <span class="stat-label">Inactive / On Leave</span>
+            <span id="stat-inactive" class="stat-value">0</span>
+          </div>
+          <div class="stat-icon">⚪</div>
+        </div>
+
+        <div class="card stat-card card-depts">
+          <div class="stat-info">
+            <span class="stat-label">Departments</span>
+            <span id="stat-depts" class="stat-value">0</span>
+          </div>
+          <div class="stat-icon">🏢</div>
+        </div>
+      </section>
+
+      <!-- Search, Filtering and Sorting Controls -->
+      <section class="controls-panel card">
+        <div class="search-box">
+          <span class="search-icon">🔍</span>
+          <input type="text" id="search-input" placeholder="Search by name, email, department, designation..." aria-label="Search employees">
+          <button id="btn-clear-search" class="btn-clear-search hidden" title="Clear search">✕</button>
+        </div>
+
+        <div class="filter-controls">
+          <div class="control-group">
+            <label for="filter-department">Department:</label>
+            <select id="filter-department">
+              <option value="All">All Departments</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="filter-status">Status:</label>
+            <select id="filter-status">
+              <option value="All">All Statuses</option>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div class="control-group">
+            <label for="sort-select">Sort By:</label>
+            <select id="sort-select">
+              <option value="name-asc">Name (A → Z)</option>
+              <option value="name-desc">Name (Z → A)</option>
+              <option value="dept-asc">Department (A → Z)</option>
+              <option value="date-desc">Joining Date (Newest)</option>
+              <option value="date-asc">Joining Date (Oldest)</option>
+              <option value="salary-desc">Salary (High to Low)</option>
+              <option value="salary-asc">Salary (Low to High)</option>
+            </select>
+          </div>
+
+          <button id="btn-clear-filters" class="btn btn-outline" title="Reset all search and filter fields">
+            Clear Filters
+          </button>
+        </div>
+      </section>
+
+      <!-- Active Filters Summary Banner -->
+      <div id="filter-status-bar" class="filter-status-bar hidden">
+        <span id="filter-status-text">Showing filtered results</span>
+      </div>
+
+      <!-- Employee Directory Table -->
+      <section class="table-section card">
+        <div class="table-wrapper">
+          <table class="employee-table">
+            <thead>
+              <tr>
+                <th>Employee</th>
+                <th>Department</th>
+                <th>Designation</th>
+                <th>Status</th>
+                <th>Joining Date</th>
+                <th>Salary</th>
+                <th class="text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody id="employee-table-body">
+              <!-- Dynamically populated via JS safe DOM methods -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Loading State Indicator -->
+        <div id="table-loading" class="state-container hidden">
+          <div class="spinner"></div>
+          <p>Loading employee directory...</p>
+        </div>
+
+        <!-- Empty State Indicator -->
+        <div id="table-empty" class="state-container hidden">
+          <div class="empty-icon">📭</div>
+          <h3>No Employees Found</h3>
+          <p id="empty-message">No records match your active search or filter criteria.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Employee Modal (Add / Edit) -->
+  <div id="employee-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Add New Employee</h2>
+        <button id="btn-modal-close" class="modal-close" aria-label="Close modal">✕</button>
+      </div>
+
+      <form id="employee-form" novalidate>
+        <input type="hidden" id="form-employee-id">
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-first-name">First Name <span class="required">*</span></label>
+            <input type="text" id="form-first-name" placeholder="e.g. Aarav" required>
+            <span class="field-error" id="err-first-name"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="form-last-name">Last Name <span class="required">*</span></label>
+            <input type="text" id="form-last-name" placeholder="e.g. Sharma" required>
+            <span class="field-error" id="err-last-name"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-email">Work Email <span class="required">*</span></label>
+            <input type="email" id="form-email" placeholder="name@example.com" required>
+            <span class="field-error" id="err-email"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="form-phone">Contact Phone <span class="required">*</span></label>
+            <input type="tel" id="form-phone" placeholder="+91-98765-43210" required>
+            <span class="field-error" id="err-phone"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-department">Department <span class="required">*</span></label>
+            <select id="form-department" required>
+              <option value="">Select Department...</option>
+              <option value="Engineering">Engineering</option>
+              <option value="Design">Design</option>
+              <option value="Marketing">Marketing</option>
+              <option value="Finance">Finance</option>
+              <option value="Human Resources">Human Resources</option>
+              <option value="Operations">Operations</option>
+            </select>
+            <span class="field-error" id="err-department"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="form-designation">Designation <span class="required">*</span></label>
+            <input type="text" id="form-designation" placeholder="e.g. Frontend Engineer" required>
+            <span class="field-error" id="err-designation"></span>
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="form-status">Employment Status <span class="required">*</span></label>
+            <select id="form-status" required>
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+            <span class="field-error" id="err-status"></span>
+          </div>
+
+          <div class="form-group">
+            <label for="form-joining-date">Joining Date <span class="required">*</span></label>
+            <input type="date" id="form-joining-date" required>
+            <span class="field-error" id="err-joining-date"></span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="form-salary">Annual Salary ($) <span class="required">*</span></label>
+          <input type="number" id="form-salary" placeholder="e.g. 85000" min="1000" step="500" required>
+          <span class="field-error" id="err-salary"></span>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" id="btn-modal-cancel" class="btn btn-secondary">Cancel</button>
+          <button type="submit" id="btn-modal-submit" class="btn btn-primary">Save Employee</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- View Details Modal -->
+  <div id="details-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h2>Employee Profile</h2>
+        <button id="btn-details-close" class="modal-close" aria-label="Close details">✕</button>
+      </div>
+      <div class="details-body" id="details-content">
+        <!-- Rendered safely via JavaScript -->
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-details-edit" class="btn btn-primary">Edit Profile</button>
+        <button type="button" id="btn-details-dismiss" class="btn btn-secondary">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="modal-backdrop hidden" aria-hidden="true" role="dialog">
+    <div class="modal-content modal-content-sm">
+      <div class="modal-header">
+        <h2 class="text-danger">Confirm Employee Deletion</h2>
+        <button id="btn-delete-close" class="modal-close" aria-label="Cancel deletion">✕</button>
+      </div>
+      <div class="delete-body">
+        <p>Are you sure you want to delete <strong id="delete-employee-name"></strong>?</p>
+        <p class="delete-warning">⚠️ This action will permanently remove the employee record from the local directory.</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" id="btn-delete-cancel" class="btn btn-secondary">Cancel</button>
+        <button type="button" id="btn-delete-confirm" class="btn btn-danger">Yes, Delete Record</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Modular Scripts -->
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
