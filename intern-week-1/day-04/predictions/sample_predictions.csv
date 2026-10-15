@@ -1,0 +1,5 @@
+facility_id,cleanliness_score,odor_score,waste_level,complaints,footfall,hours_since_cleaning,predicted_risk,prob_Low_%,prob_Medium_%,prob_High_%
+TEST-01 (Newly Sanitized),96.5,1,Low,0,950,1.0,Low,99.8,0.2,0.0
+TEST-02 (Standard Concourse),79.0,2,Medium,3,2200,5.5,Medium,14.5,85.2,0.3
+TEST-03 (High-Footfall Shift End),68.5,4,High,7,3800,9.0,High,0.0,2.7,97.3
+TEST-04 (Severe Neglect),54.0,5,High,12,4100,14.5,High,0.0,0.0,100.0
