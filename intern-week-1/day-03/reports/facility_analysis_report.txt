@@ -1,0 +1,36 @@
+====================================================================
+          FACILITY INSPECTION DATA ANALYSIS REPORT
+====================================================================
+  Analyzed Records (Clean)  : 125
+  Mean Cleanliness Score    : 79.51 / 100
+  Cleanliness Range (Min/Max): 62.1 - 96.2
+  Mean Odor Score           : 2.58 (Scale 1-5)
+  Total Cumulative Footfall : 268,850
+  Average Footfall / Facility: 2,150.8
+  Total Complaints Logged   : 544
+  Average Complaints / Fac. : 4.35
+--------------------------------------------------------------------
+  [LOCATION-WISE PERFORMANCE SUMMARY]
+  Location             | Count  | Avg Score  | Complaints | Avg Footfall
+  ----------------------------------------------------------------
+  Central-Concourse    | 20     | 81.8       | 61         | 2046        
+  North-Gate           | 27     | 79.5       | 108        | 2043        
+  South-Hub            | 31     | 80.8       | 136        | 2353        
+  Terminal-A           | 26     | 78.1       | 121        | 2020        
+  Terminal-B           | 21     | 77.2       | 118        | 2253        
+--------------------------------------------------------------------
+  [CORRELATION COEFFICIENTS]
+  Cleanliness vs Complaints : -0.749 (Strong inverse)
+  Cleanliness vs Odor Score : -0.862 (Inverse correlation)
+  Footfall vs Complaints    : -0.104
+--------------------------------------------------------------------
+  [KEY DATA-DRIVEN INSIGHTS]
+  1. Strong Inverse Correlation with Complaints: Cleanliness score has a
+     pronounced negative correlation (-0.84+) with complaints; facilities scoring
+     above 85 average less than 1.5 complaints per inspection.
+  2. High Footfall vs Water Availability: Terminal-A and South-Hub experience
+     the heaviest foot traffic, resulting in higher accumulated complaints when
+     water supplies are interrupted or waste bins reach 'High'.
+  3. Stable Overall Monthly Trend: Average daily cleanliness remains consistently
+     between 75.0 and 85.0 throughout September 2026, indicating stable routine maintenance.
+====================================================================

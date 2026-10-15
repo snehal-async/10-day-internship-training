@@ -1,0 +1,108 @@
+{
+  "total_records": 125,
+  "cleanliness_score": {
+    "mean": 79.51,
+    "std": 9.83,
+    "min": 62.1,
+    "max": 96.2,
+    "median": 81.2
+  },
+  "odor_score": {
+    "mean": 2.58,
+    "min": 1,
+    "max": 5
+  },
+  "footfall": {
+    "total": 268850,
+    "mean": 2150.8,
+    "min": 450,
+    "max": 4954
+  },
+  "complaints": {
+    "total": 544,
+    "mean": 4.35,
+    "max": 12
+  },
+  "waste_distribution": {
+    "Medium": 52,
+    "Low": 44,
+    "High": 29
+  },
+  "water_distribution": {
+    "Yes": 91,
+    "No": 34
+  },
+  "location_summary": [
+    {
+      "location": "Central-Concourse",
+      "inspections": 20,
+      "avg_cleanliness": 81.81,
+      "total_complaints": 61,
+      "avg_complaints": 3.05,
+      "avg_footfall": 2046.0,
+      "avg_odor": 2.2
+    },
+    {
+      "location": "North-Gate",
+      "inspections": 27,
+      "avg_cleanliness": 79.46,
+      "total_complaints": 108,
+      "avg_complaints": 4.0,
+      "avg_footfall": 2043.0,
+      "avg_odor": 2.63
+    },
+    {
+      "location": "South-Hub",
+      "inspections": 31,
+      "avg_cleanliness": 80.77,
+      "total_complaints": 136,
+      "avg_complaints": 4.39,
+      "avg_footfall": 2353.0,
+      "avg_odor": 2.48
+    },
+    {
+      "location": "Terminal-A",
+      "inspections": 26,
+      "avg_cleanliness": 78.14,
+      "total_complaints": 121,
+      "avg_complaints": 4.65,
+      "avg_footfall": 2020.0,
+      "avg_odor": 2.81
+    },
+    {
+      "location": "Terminal-B",
+      "inspections": 21,
+      "avg_cleanliness": 77.23,
+      "total_complaints": 118,
+      "avg_complaints": 5.62,
+      "avg_footfall": 2253.0,
+      "avg_odor": 2.76
+    }
+  ],
+  "correlations": {
+    "cleanliness_score": {
+      "cleanliness_score": 1.0,
+      "odor_score": -0.862,
+      "footfall": 0.168,
+      "complaints": -0.749
+    },
+    "odor_score": {
+      "cleanliness_score": -0.862,
+      "odor_score": 1.0,
+      "footfall": -0.206,
+      "complaints": 0.667
+    },
+    "footfall": {
+      "cleanliness_score": 0.168,
+      "odor_score": -0.206,
+      "footfall": 1.0,
+      "complaints": -0.104
+    },
+    "complaints": {
+      "cleanliness_score": -0.749,
+      "odor_score": 0.667,
+      "footfall": -0.104,
+      "complaints": 1.0
+    }
+  }
+}
