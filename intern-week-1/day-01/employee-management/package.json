@@ -1,0 +1,19 @@
+{
+  "name": "employee-management-cli",
+  "version": "1.0.0",
+  "description": "Interactive Employee Management CLI with JSON persistence and robust validation",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "node --test tests/employee-management.test.js"
+  },
+  "keywords": [
+    "employee-management",
+    "cli",
+    "nodejs",
+    "json-persistence",
+    "crud"
+  ],
+  "author": "snehal-async",
+  "license": "ISC"
+}

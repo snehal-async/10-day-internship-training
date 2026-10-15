@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment and Secrets
+.env
+.env.local
+.env.*.local
+
+# Employee Management Data persistence
+# Keep the data directory tracked with .gitkeep but ignore generated JSON data
+intern-week-1/day-01/employee-management/data/*.json
+!intern-week-1/day-01/employee-management/data/.gitkeep
+
+# Temporary / Scratch Files
+tmp/
+temp/
+*.tmp

@@ -1,0 +1,21 @@
+{
+  "name": "day-01-fundamentals-and-dsa",
+  "version": "1.0.0",
+  "description": "Day 1: Programming Fundamentals, 15 DSA Exercises & Employee Management CLI",
+  "main": "employee-management/src/index.js",
+  "scripts": {
+    "start": "node employee-management/src/index.js",
+    "exercises": "node exercises/run-all.js",
+    "test": "node --test employee-management/tests/exercises.test.js employee-management/tests/employee-management.test.js"
+  },
+  "keywords": [
+    "javascript",
+    "dsa",
+    "cli",
+    "fundamentals",
+    "internship",
+    "testing"
+  ],
+  "author": "snehal-async",
+  "license": "ISC"
+}
