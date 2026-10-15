@@ -1,0 +1,12 @@
+﻿# Python
+__pycache__/
+*.pyc
+
+# Runtime data files (retain .gitkeep)
+management-system/data/*.json
+!management-system/data/.gitkeep
+
+# Generated reports (retain .gitkeep)
+csv-analysis/reports/*.json
+csv-analysis/reports/*.txt
+!csv-analysis/reports/.gitkeep
