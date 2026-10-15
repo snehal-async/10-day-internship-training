@@ -1,0 +1,14 @@
+﻿id,name,department,salary
+EMP101,Alice Johnson,Engineering,85000.00
+EMP102,Bob Smith,Marketing,62000.00
+EMP103,Charlie Brown,Engineering,92000.50
+EMP104,Diana Prince,Human Resources,58000.00
+EMP105,Evan Wright,Finance,74000.00
+EMP106,Fiona Gallagher,Engineering,88000.00
+EMP107,George Clark,Operations,51000.00
+EMP108,Hannah Abbott,Marketing,65000.00
+EMP109,Ian Malcolm,Finance,79000.00
+EMP110,Julia Roberts,Human Resources,61000.00
+EMP101,Alice Johnson,Engineering,85000.00
+EMP111,Kevin Bacon,,55000.00
+EMP112,Laura Croft,Operations,NOT_A_NUMBER
