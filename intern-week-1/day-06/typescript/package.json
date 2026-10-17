@@ -1,0 +1,29 @@
+﻿{
+  "name": "day-06-typescript-practice",
+  "version": "1.0.0",
+  "description": "Comprehensive TypeScript learning exercises covering core types, interfaces, generics, and narrowing",
+  "main": "01-primitive-types.ts",
+  "type": "module",
+  "scripts": {
+    "type-check": "tsc --noEmit",
+    "run:01": "npx tsx 01-primitive-types.ts",
+    "run:02": "npx tsx 02-arrays-and-objects.ts",
+    "run:03": "npx tsx 03-interfaces-and-type-aliases.ts",
+    "run:04": "npx tsx 04-union-types-and-enums.ts",
+    "run:05": "npx tsx 05-optional-properties.ts",
+    "run:06": "npx tsx 06-functions.ts",
+    "run:07": "npx tsx 07-classes.ts",
+    "run:08": "npx tsx 08-generics.ts",
+    "run:09": "npx tsx 09-type-narrowing-and-type-guards.ts",
+    "run:all": "npx tsx 01-primitive-types.ts && npx tsx 02-arrays-and-objects.ts && npx tsx 03-interfaces-and-type-aliases.ts && npx tsx 04-union-types-and-enums.ts && npx tsx 05-optional-properties.ts && npx tsx 06-functions.ts && npx tsx 07-classes.ts && npx tsx 08-generics.ts && npx tsx 09-type-narrowing-and-type-guards.ts"
+  },
+  "keywords": [
+    "typescript",
+    "fundamentals",
+    "types",
+    "interfaces",
+    "generics"
+  ],
+  "author": "snehal-async",
+  "license": "MIT"
+}
