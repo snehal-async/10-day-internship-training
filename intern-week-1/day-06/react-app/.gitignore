@@ -12,6 +12,9 @@ dist
 dist-ssr
 *.local
 
+# Ensure package-lock.json is tracked for CI/CD deployments (Vercel, Render)
+!package-lock.json
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
