@@ -1,0 +1,9 @@
+{
+  "outputDirectory": "dist/angular-app/browser",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
