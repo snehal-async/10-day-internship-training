@@ -20,12 +20,15 @@ export class ApiService {
   private readonly requestTimeoutMs = 3500;
 
   constructor() {
-    const savedDemo = localStorage.getItem('facilityops_demo_mode');
-    if (savedDemo === 'true') {
+    const isHosted = typeof window !== 'undefined' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1';
+    const savedDemo = typeof localStorage !== 'undefined' ? localStorage.getItem('facilityops_demo_mode') : null;
+    
+    // In hosted cloud environments (e.g. Vercel) where local backend isn't reachable, default to interactive demo mode
+    if (savedDemo === 'true' || (savedDemo === null && isHosted)) {
       this.isDemoModeSubject.next(true);
     }
 
-    const savedToken = localStorage.getItem('facilityops_angular_token');
+    const savedToken = typeof localStorage !== 'undefined' ? localStorage.getItem('facilityops_angular_token') : null;
     if (savedToken) {
       this.authToken = savedToken;
     }
