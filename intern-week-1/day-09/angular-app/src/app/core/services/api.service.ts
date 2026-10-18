@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { BehaviorSubject, Observable, catchError, map, of, tap, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, map, of, tap, throwError, timeout } from 'rxjs';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -17,6 +17,7 @@ export class ApiService {
   public readonly isDemoMode$ = this.isDemoModeSubject.asObservable();
 
   private authToken: string | null = null;
+  private readonly requestTimeoutMs = 3500;
 
   constructor() {
     const savedDemo = localStorage.getItem('facilityops_demo_mode');
@@ -67,8 +68,7 @@ export class ApiService {
 
   private buildHeaders(): HttpHeaders {
     let headers = new HttpHeaders({
-      'Accept': 'application/json',
-      'Content-Type': 'application/json'
+      'Accept': 'application/json'
     });
 
     if (this.authToken) {
@@ -91,9 +91,11 @@ export class ApiService {
     }
 
     return this.http.get<T>(url, { headers: this.buildHeaders(), params: httpParams }).pipe(
+      timeout(this.requestTimeoutMs),
       tap(() => this.markOnline()),
       catchError(err => {
         this.markOffline();
+        this.setDemoMode(true);
         return throwError(() => err);
       })
     );
@@ -101,7 +103,9 @@ export class ApiService {
 
   public post<T>(endpoint: string, body: unknown): Observable<T> {
     const url = `${this.baseUrl}/${endpoint.replace(/^\/+/, '')}`;
-    return this.http.post<T>(url, body, { headers: this.buildHeaders() }).pipe(
+    const headers = this.buildHeaders().set('Content-Type', 'application/json');
+    return this.http.post<T>(url, body, { headers }).pipe(
+      timeout(this.requestTimeoutMs),
       tap(() => this.markOnline()),
       catchError(err => {
         this.markOffline();
@@ -112,7 +116,9 @@ export class ApiService {
 
   public put<T>(endpoint: string, body: unknown): Observable<T> {
     const url = `${this.baseUrl}/${endpoint.replace(/^\/+/, '')}`;
-    return this.http.put<T>(url, body, { headers: this.buildHeaders() }).pipe(
+    const headers = this.buildHeaders().set('Content-Type', 'application/json');
+    return this.http.put<T>(url, body, { headers }).pipe(
+      timeout(this.requestTimeoutMs),
       tap(() => this.markOnline()),
       catchError(err => {
         this.markOffline();
@@ -124,6 +130,7 @@ export class ApiService {
   public delete<T>(endpoint: string): Observable<T> {
     const url = `${this.baseUrl}/${endpoint.replace(/^\/+/, '')}`;
     return this.http.delete<T>(url, { headers: this.buildHeaders() }).pipe(
+      timeout(this.requestTimeoutMs),
       tap(() => this.markOnline()),
       catchError(err => {
         this.markOffline();

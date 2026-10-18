@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { Observable, catchError, forkJoin, map, of } from 'rxjs';
+import { Observable, catchError, map, of } from 'rxjs';
 import { ApiService } from './api.service';
 import { FacilityService } from './facility.service';
 import { InspectionService } from './inspection.service';
@@ -35,15 +35,21 @@ export class DashboardService {
       recent_complaints: any[];
     }>>('stats').pipe(
       map(res => {
+        if (!res || !res.data || !res.data.totals) {
+          return this.computeLocalSummary();
+        }
+
         const totals = res.data.totals;
         const totalComplaints = totals.complaints || 0;
         const resolved = totals.resolved_complaints || 0;
         const rate = totalComplaints > 0 ? Math.round((resolved / totalComplaints) * 100) : 100;
+        const recentInspections = Array.isArray(res.data.recent_inspections) ? res.data.recent_inspections : [];
+        const recentComplaints = Array.isArray(res.data.recent_complaints) ? res.data.recent_complaints : [];
 
         const metrics: DashboardMetrics = {
           totalFacilities: totals.facilities || 0,
           inspectionsCompleted: totals.inspections || 0,
-          pendingInspections: res.data.recent_inspections.filter(i => i.follow_up_required).length,
+          pendingInspections: recentInspections.filter(i => i.follow_up_required).length,
           openComplaints: totals.open_complaints || 0,
           inProgressComplaints: totals.in_progress_complaints || 0,
           resolvedComplaints: resolved,
@@ -53,11 +59,13 @@ export class DashboardService {
 
         return {
           metrics,
-          recentInspections: res.data.recent_inspections || [],
-          recentComplaints: res.data.recent_complaints || []
+          recentInspections,
+          recentComplaints
         };
       }),
-      catchError(() => of(this.computeLocalSummary()))
+      catchError(() => {
+        return of(this.computeLocalSummary());
+      })
     );
   }
 
