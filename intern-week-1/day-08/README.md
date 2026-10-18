@@ -30,6 +30,12 @@ All Day 08 code and documentation strictly reside within `intern-week-1/day-08/`
 ```text
 intern-week-1/day-08/
 ├── README.md                          # Master Day 08 documentation & technical report
+├── dashboard/                         # Working React 19 + TypeScript + Vite web dashboard
+│   ├── src/                           # UI views, typed API client, modals, & theme
+│   ├── index.html                     # Dashboard application entry point
+│   ├── package.json                   # Dashboard dependencies (lucide-react, react 19, vite)
+│   ├── .env.example                   # Dashboard API URL configuration template
+│   └── README.md                      # Frontend architecture & execution guide
 ├── sql/
 │   ├── README.md                      # Guide to PostgreSQL scripts & query performance
 │   ├── 01-create-tables.sql           # DDL schema creating all 6 tables with constraints & indexes
@@ -263,7 +269,7 @@ The test suite was executed using Laravel's native test runner (`artisan test` p
    ```
 3. Load the sample seed data:
    ```powershell
-   & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -d internship_day08 -f "intern-week-1/day-08/database/seed.sql"
+   & "C:\Program Files\PostgreSQL\18\bin\psql.exe" -U postgres -h localhost -d day8_internship -f "intern-week-1/day-08/database/seed.sql"
    ```
 
 ### Laravel API Setup
@@ -273,25 +279,128 @@ The test suite was executed using Laravel's native test runner (`artisan test` p
    cd intern-week-1/day-08/laravel-api
    Copy-Item .env.example .env
    ```
-2. Configure your local PostgreSQL password in `.env`:
+2. Configure your local PostgreSQL credentials in `.env`:
    ```ini
    DB_CONNECTION=pgsql
    DB_HOST=127.0.0.1
    DB_PORT=5432
-   DB_DATABASE=internship_day08
+   DB_DATABASE=day8_internship
    DB_USERNAME=postgres
    DB_PASSWORD=your_actual_postgres_password
    ```
 3. Run migrations and seeders:
    ```powershell
-   & "C:\Users\LENOVO\tools\php\php.exe" artisan migrate:fresh --seed
+   & "C:\Users\LENOVO\tools\php\php.exe" artisan migrate --seed
    ```
 4. Start the Laravel development server:
    ```powershell
    & "C:\Users\LENOVO\tools\php\php.exe" artisan serve --port=8000
    ```
-5. Test the API:
+5. Verify the API is responding:
    ```bash
    curl http://localhost:8000/api/health
+   curl http://localhost:8000/api/stats
    curl http://localhost:8000/api/facilities
    ```
+
+---
+
+## 9. FacilityOps Web Dashboard
+
+A responsive frontend web dashboard was added to `intern-week-1/day-08/dashboard/` using **React 19**, **TypeScript**, and **Vite**.
+
+### Dashboard Features
+
+1. **Executive Overview Page:**
+   - Real-time KPI summary cards displaying live counts of:
+     - Total Facilities
+     - Total Completed Inspections & Audits
+     - Total Maintenance Complaints / Tickets
+     - Open vs. In-Progress vs. Resolved Complaints
+     - Resolution Rate Percentage
+     - Facilities flagged in Poor or Critical health rating
+   - Live stream of recent safety audits with color-coded compliance gauges.
+   - Live stream of recent maintenance tickets with priority severity pills.
+   - Quick shortcut actions to register facilities, audits, or tickets.
+
+2. **Facilities Directory Page:**
+   - Full tabular directory of physical facilities.
+   - Real-time search across facility names, alphanumeric facility codes, street addresses, and cities.
+   - Filter dropdowns for facility types (*Corporate Office*, *Warehouse*, *Laboratory*, *Data Center*, *Manufacturing*) and condition ratings (*Excellent*, *Good*, *Fair*, *Poor*, *Critical*).
+   - Facility Detail Modal displaying capacity, full address, and embedded recent inspection audits and active maintenance tickets.
+   - Full CRUD modal workflows with validation (name, unique code, street address, city, positive integer capacity).
+   - Deletion confirmation modal with cascade warning.
+
+3. **Safety & Compliance Inspections Page:**
+   - Audits directory with inspection numbers, facility names, assigned inspector, audit dates, compliance scores, and results.
+   - Visual compliance score bars (0–100) color-coded by threshold (emerald for pass >=80, amber for conditional >=60, rose for fail <60).
+   - Inspection Record Modal with facility picker, inspector picker, score validation, notes, and conditional follow-up date enforcement.
+   - Inspection Detail Modal with complete findings and inspector notes.
+   - Deletion confirmation modal.
+
+4. **Complaints & Work Orders Page:**
+   - Maintenance ticket directory with facility association, issue descriptions, severity ratings, lifecycle status, and timestamps.
+   - Filter by status (*Open*, *In Progress*, *Resolved*, *Closed*, *Rejected*) and severity (*Low*, *Medium*, *High*, *Urgent*).
+   - In-line quick status updater allowing instant ticket lifecycle transitions with auto-timestamping upon resolution.
+   - Ticket Creation & Edit Modals with facility selector, staff assignee, and resolution notes.
+   - Deletion confirmation modal.
+
+5. **API Integration & Authentication:**
+   - Real HTTP requests to the Laravel 11 REST API via `fetch` (no mocked dummy data, no silent localStorage substitution).
+   - Configurable API endpoint via `VITE_API_URL` environment variable.
+   - Bearer token authentication with a one-click **Demo Admin** switcher using seeded credentials (`sarah.admin@enterprise.local` / `Password123!`).
+   - CORS enabled for seamless cross-origin communication between `localhost:5173` and `localhost:8000`.
+   - Polished Toast notification system with auto-dismiss for clear success and error feedback.
+
+### Dashboard Setup & Running Instructions
+
+1. Navigate to the dashboard directory:
+   ```powershell
+   cd intern-week-1/day-08/dashboard
+   ```
+2. Copy `.env.example` to `.env`:
+   ```powershell
+   Copy-Item .env.example .env
+   ```
+3. Install frontend dependencies:
+   ```powershell
+   npm install
+   ```
+4. Start the Vite development server:
+   ```powershell
+   npm run dev
+   ```
+5. Open your browser:
+   👉 **`http://localhost:5173`**
+
+### Simultaneous Execution of All Required Services
+
+To operate the complete full-stack Day 8 system locally:
+
+| Service | Terminal / Command | Local URL |
+| :--- | :--- | :--- |
+| **PostgreSQL Database** | PostgreSQL 18 Service (auto-runs or started via Windows Services) | `localhost:5432` (`day8_internship`) |
+| **Laravel REST API** | `cd intern-week-1/day-08/laravel-api; & "C:\Users\LENOVO\tools\php\php.exe" artisan serve --port=8000` | `http://localhost:8000/api` |
+| **FacilityOps Dashboard** | `cd intern-week-1/day-08/dashboard; npm run dev` | `http://localhost:5173` |
+
+---
+
+## 10. Verification & Test Summary
+
+All testing was actually executed and verified on the local system:
+
+1. **Automated Laravel Feature & Unit Tests:**
+   - Command: `php artisan test`
+   - Result: **27 passed (105 assertions)** in 2.04 seconds.
+   - Coverage: `AuthApiTest` (7 tests), `FacilityApiTest` (8 tests), `InspectionApiTest` (5 tests), `ComplaintApiTest` (5 tests), `ExampleTest` (2 tests).
+
+2. **Frontend TypeScript & Vite Production Build:**
+   - Command: `npm run build` (`tsc -b && vite build`)
+   - Result: **Zero errors**, successfully bundled `dist/assets/index-DnLWbVjp.js` (315 kB) and `dist/assets/index-DpnVfL7A.css` (12.5 kB).
+
+3. **Live Database Integration Verification:**
+   - Verified active connection to PostgreSQL 18 database `day8_internship`.
+   - Verified `GET /api/stats` endpoint returns live aggregate calculations (6 facilities, 8 audits, 10 tickets).
+   - Verified `GET /api/inspectors` returns active staff users.
+   - Verified CORS configuration accepts cross-origin pre-flight requests (`OPTIONS`) from `http://localhost:5173`.
+
