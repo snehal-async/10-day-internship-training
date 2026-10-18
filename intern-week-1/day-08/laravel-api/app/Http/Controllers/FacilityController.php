@@ -4,12 +4,75 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreFacilityRequest;
 use App\Http\Requests\UpdateFacilityRequest;
+use App\Models\Complaint;
 use App\Models\Facility;
+use App\Models\Inspection;
+use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class FacilityController extends Controller
 {
+    /**
+     * Return aggregated dashboard statistics and recent activities.
+     *
+     * GET /api/stats
+     */
+    public function stats(): JsonResponse
+    {
+        $totalFacilities = Facility::count();
+        $totalInspections = Inspection::count();
+        $totalComplaints = Complaint::count();
+        $openComplaints = Complaint::where('status', 'open')->count();
+        $inProgressComplaints = Complaint::where('status', 'in_progress')->count();
+        $resolvedComplaints = Complaint::where('status', 'resolved')->count();
+        $poorFacilities = Facility::whereIn('condition_rating', ['poor', 'critical'])->count();
+
+        $recentInspections = Inspection::with(['facility:id,name,facility_code', 'inspector:id,name'])
+            ->latest('inspection_date')
+            ->limit(5)
+            ->get();
+
+        $recentComplaints = Complaint::with(['facility:id,name,facility_code', 'assignedTo:id,name'])
+            ->latest('created_at')
+            ->limit(5)
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'totals' => [
+                    'facilities' => $totalFacilities,
+                    'inspections' => $totalInspections,
+                    'complaints' => $totalComplaints,
+                    'open_complaints' => $openComplaints,
+                    'in_progress_complaints' => $inProgressComplaints,
+                    'resolved_complaints' => $resolvedComplaints,
+                    'poor_facilities' => $poorFacilities,
+                ],
+                'recent_inspections' => $recentInspections,
+                'recent_complaints' => $recentComplaints,
+            ],
+        ]);
+    }
+
+    /**
+     * Return list of inspectors for assignment dropdowns.
+     *
+     * GET /api/inspectors
+     */
+    public function inspectors(): JsonResponse
+    {
+        $inspectors = User::select('id', 'name', 'email', 'role')
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $inspectors,
+        ]);
+    }
     /**
      * Display a listing of facilities with search, filter, and pagination.
      *

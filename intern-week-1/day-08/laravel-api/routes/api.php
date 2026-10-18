@@ -34,6 +34,9 @@ Route::prefix('auth')->group(function () {
 });
 
 // --- Public Read-Only Resource Endpoints ---
+Route::get('/stats', [FacilityController::class, 'stats']);
+Route::get('/inspectors', [FacilityController::class, 'inspectors']);
+
 Route::prefix('facilities')->group(function () {
     Route::get('/', [FacilityController::class, 'index']);
     Route::get('/{id}', [FacilityController::class, 'show']);

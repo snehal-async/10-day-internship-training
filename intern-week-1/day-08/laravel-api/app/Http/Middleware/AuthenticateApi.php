@@ -15,6 +15,10 @@ class AuthenticateApi
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if ($request->isMethod('OPTIONS')) {
+            return $next($request);
+        }
+
         $header = $request->header('Authorization');
 
         if (! $header || ! str_starts_with($header, 'Bearer ')) {
