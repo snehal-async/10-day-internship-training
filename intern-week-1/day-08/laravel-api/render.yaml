@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: facilityops-api
+    runtime: docker
+    rootDir: intern-week-1/day-08/laravel-api
+    dockerfilePath: Dockerfile
+    plan: free
+    region: oregon
+    envVars:
+      - key: APP_NAME
+        value: FacilityOpsAPI
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_KEY
+        generateValue: true
+      - key: DB_CONNECTION
+        value: pgsql
+      - key: RUN_MIGRATIONS
+        value: "true"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: facilityops-db
+          property: connectionString
+
+databases:
+  - name: facilityops-db
+    databaseName: day8_internship
+    user: postgres
+    plan: free
+    region: oregon

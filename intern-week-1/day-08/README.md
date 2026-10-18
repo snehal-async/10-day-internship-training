@@ -404,3 +404,92 @@ All testing was actually executed and verified on the local system:
    - Verified `GET /api/inspectors` returns active staff users.
    - Verified CORS configuration accepts cross-origin pre-flight requests (`OPTIONS`) from `http://localhost:5173`.
 
+---
+
+## 11. Cloud Deployment Guide (Backend on Render & Frontend on Vercel)
+
+Both the Laravel backend and Vite frontend are pre-configured for zero-error production deployment to cloud hosting.
+
+```
+┌─────────────────────────────────┐       HTTPS REST API       ┌─────────────────────────────────┐
+│         Vercel (Frontend)       │ ─────────────────────────> │         Render (Backend)        │
+│    React 19 + TypeScript + Vite │                            │   Laravel 11 + Docker Container │
+│   https://<app>.vercel.app      │ <───────────────────────── │   https://<api>.onrender.com    │
+└─────────────────────────────────┘        CORS: "*"           └────────────────┬────────────────┘
+                                                                                │
+                                                                   PostgreSQL   │ Internal URL / Pool
+                                                                                ▼
+                                                               ┌─────────────────────────────────┐
+                                                               │    Render / Neon PostgreSQL     │
+                                                               │        `day8_internship`        │
+                                                               └─────────────────────────────────┘
+```
+
+---
+
+### Step A: Deploy Backend & PostgreSQL on Render
+
+#### 1. Create PostgreSQL Database on Render
+1. Log into [Render Dashboard](https://dashboard.render.com).
+2. Click **New +** ➔ **PostgreSQL**.
+3. Set:
+   - **Name:** `facilityops-db`
+   - **Database:** `day8_internship`
+   - **User:** `postgres`
+   - **Region:** Choose closest region (e.g., Oregon or Frankfurt).
+   - **Plan:** Free
+4. Click **Create Database**.
+5. Once created, copy the **Internal Database URL** (e.g., `postgres://postgres:password@dpg-xxx-a:5432/day8_internship`).
+
+#### 2. Create Laravel Web Service on Render
+1. In Render, click **New +** ➔ **Web Service**.
+2. Connect your GitHub repository: `snehal-async/10-day-internship-training`.
+3. Configure service settings:
+   - **Name:** `facilityops-api` (or your choice)
+   - **Region:** Same region as your database
+   - **Branch:** `main`
+   - **Root Directory:** `intern-week-1/day-08/laravel-api`
+   - **Runtime:** **Docker** *(Render detects the included production `Dockerfile` automatically)*
+   - **Plan:** Free
+4. Under **Environment Variables**, add:
+
+| Key | Value | Description |
+| :--- | :--- | :--- |
+| `APP_NAME` | `FacilityOpsAPI` | Application name |
+| `APP_ENV` | `production` | Production mode |
+| `APP_DEBUG` | `false` | Disable debug stack traces |
+| `APP_KEY` | `base64:XG8dF4w73Q8m3Fq9L5k1...` | Run `php artisan key:generate --show` locally to generate |
+| `DB_CONNECTION` | `pgsql` | PostgreSQL driver |
+| `DATABASE_URL` | *(Paste Render Internal Database URL)* | Auto-maps to Laravel pgsql configuration |
+| `RUN_MIGRATIONS` | `true` | Automatically executes `migrate --force --seed` on startup |
+
+5. Under **Health Check Path**, enter: `/api/health`.
+6. Click **Create Web Service**.
+7. Render will build the Docker container, run migrations, seed tables, and make the API live at:
+   👉 **`https://facilityops-api.onrender.com`**
+   *(Test health: `https://facilityops-api.onrender.com/api/health`)*
+
+---
+
+### Step B: Deploy Frontend Dashboard on Vercel
+
+1. Log into [Vercel Dashboard](https://vercel.com).
+2. Click **Add New...** ➔ **Project**.
+3. Import the GitHub repository: `snehal-async/10-day-internship-training`.
+4. Configure the project parameters:
+   - **Project Name:** `facilityops-dashboard`
+   - **Framework Preset:** **Vite**
+   - **Root Directory:** Click **Edit** and select:
+     👉 **`intern-week-1/day-08/dashboard`**
+   - **Build & Development Settings:** Leave default (`npm run build` with output `dist`, guided by `vercel.json`).
+5. Open the **Environment Variables** panel and add:
+
+| Key | Value |
+| :--- | :--- |
+| `VITE_API_URL` | `https://facilityops-api.onrender.com/api` *(Your Render backend URL + `/api`)* |
+
+6. Click **Deploy**.
+7. Vercel will install dependencies, compile the TypeScript bundle, and launch your live dashboard:
+   👉 **`https://facilityops-dashboard.vercel.app`**
+
+
