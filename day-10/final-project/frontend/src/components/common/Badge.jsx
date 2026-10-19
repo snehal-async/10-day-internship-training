@@ -38,11 +38,13 @@ export function OutcomeBadge({ outcome }) {
         case 'passed':
             return <Badge variant="success">Passed Audit</Badge>;
         case 'needs_improvement':
-            return <Badge variant="warning">Follow-up Required</Badge>;
+        case 'conditional_pass':
+            return <Badge variant="warning">Conditional Pass</Badge>;
         case 'failed':
+        case 'critical_failure':
             return <Badge variant="danger">Failed Audit</Badge>;
         default:
-            return <Badge variant="neutral">{outcome}</Badge>;
+            return <Badge variant="neutral">{outcome?.replace('_', ' ')}</Badge>;
     }
 }
 export function PriorityBadge({ priority }) {

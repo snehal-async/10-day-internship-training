@@ -115,7 +115,7 @@ export function AuthModal({ isOpen, onClose, onSuccess }) {
             lineHeight: 1.5,
         }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', fontWeight: 600, color: 'var(--text-primary)', marginBottom: '0.25rem' }}>
-                <Key size={13}/> Live PostgreSQL Database Admin:
+                <Key size={13}/> Administrator Account:
               </div>
               Email: <code>sarah.admin@enterprise.local</code> | Password: <code>Password123!</code>
             </div>

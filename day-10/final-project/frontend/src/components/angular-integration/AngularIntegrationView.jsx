@@ -19,19 +19,19 @@ export function AngularIntegrationView() {
       <div className="page-header">
         <div>
           <h1 className="page-title">
-            Cross-Framework Angular 22 Integration
+            Field Inspection Module
           </h1>
           <p className="page-subtitle">
-            Harmonized enterprise design system bridging the Day 9 Angular client with the Day 8 Laravel/PostgreSQL API
+            Dedicated field inspection application for on-site inspectors and safety audits.
           </p>
         </div>
         <div className="page-actions">
           <button className="btn btn-secondary" onClick={checkConnection} disabled={testingEndpoint}>
             <RefreshCw size={15} className={testingEndpoint ? 'animate-spin' : ''}/>
-            <span>Probe API Health</span>
+            <span>Check Status</span>
           </button>
           <a href="http://localhost:4200" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ textDecoration: 'none' }}>
-            <span>Launch Angular Hub</span>
+            <span>Launch Inspection App</span>
             <ExternalLink size={15}/>
           </a>
         </div>

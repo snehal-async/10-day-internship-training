@@ -41,8 +41,9 @@ export function DashboardCharts({ facilities, complaints, inspectionTrends }) {
         low: 0,
     };
     complaints.forEach((c) => {
-        if (priorityCounts[c.priority] !== undefined) {
-            priorityCounts[c.priority]++;
+        const key = (c.severity || c.priority || '').toLowerCase();
+        if (priorityCounts[key] !== undefined) {
+            priorityCounts[key]++;
         }
     });
     const priorityData = [
@@ -59,7 +60,7 @@ export function DashboardCharts({ facilities, complaints, inspectionTrends }) {
             <h2 className="card-title">Audits Over Time</h2>
             <p className="card-subtitle">Monthly inspection volume & verified passes</p>
           </div>
-          <span className="badge badge-info">Recharts</span>
+          <span className="badge badge-neutral">6 Months</span>
         </div>
         <div className="card-body" style={{ height: 260 }}>
           <ResponsiveContainer width="100%" height="100%">

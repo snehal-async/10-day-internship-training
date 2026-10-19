@@ -1,5 +1,5 @@
 import { AlertCircle, RefreshCw } from 'lucide-react';
-export function ErrorState({ title = 'Failed to load telemetry data', message, onRetry, isRetrying = false, }) {
+export function ErrorState({ title = 'Failed to load data', message, onRetry, isRetrying = false, }) {
     return (<div className="error-state" role="alert">
       <div style={{
             width: 44,

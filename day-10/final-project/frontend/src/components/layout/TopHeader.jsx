@@ -17,7 +17,7 @@ export function TopHeader({ onToggleMobileSidebar, searchQuery, onSearchChange, 
       </div>
 
       <div className="header-right">
-        {/* PostgreSQL Live Database Status Indicator */}
+        {/* System Status Indicator */}
         <div style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -26,18 +26,18 @@ export function TopHeader({ onToggleMobileSidebar, searchQuery, onSearchChange, 
             borderRadius: 'var(--radius-full)',
             fontSize: '0.75rem',
             fontWeight: 600,
-            color: isOnline ? 'var(--emerald-700)' : 'var(--rose-700)',
-            backgroundColor: isOnline ? 'var(--emerald-50)' : 'var(--rose-50)',
-            border: `1px solid ${isOnline ? 'var(--emerald-200)' : 'var(--rose-200)'}`,
+            color: isOnline ? 'var(--emerald-700)' : 'var(--amber-700)',
+            backgroundColor: isOnline ? 'var(--emerald-50)' : 'var(--amber-50)',
+            border: `1px solid ${isOnline ? 'var(--emerald-200)' : 'var(--amber-200)'}`,
         }}>
           <span style={{
             width: 8,
             height: 8,
             borderRadius: '50%',
-            backgroundColor: isOnline ? 'var(--emerald-600)' : 'var(--rose-600)',
-            boxShadow: isOnline ? '0 0 0 2px rgba(16, 185, 129, 0.3)' : '0 0 0 2px rgba(239, 68, 68, 0.3)',
+            backgroundColor: isOnline ? 'var(--emerald-600)' : 'var(--amber-600)',
+            boxShadow: isOnline ? '0 0 0 2px rgba(16, 185, 129, 0.3)' : '0 0 0 2px rgba(245, 158, 11, 0.3)',
         }}/>
-          {isOnline ? 'PostgreSQL 18: Live Connected' : 'PostgreSQL: Offline'}
+          {isOnline ? 'Online' : 'Offline'}
         </div>
 
         {/* Refresh button */}

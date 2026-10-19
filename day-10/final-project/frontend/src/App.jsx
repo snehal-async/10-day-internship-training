@@ -89,7 +89,7 @@ export function App() {
       setIsOnline(health.online);
 
       if (!health.online) {
-        showToast('error', 'PostgreSQL Backend is unreachable. Please run "php artisan serve" on port 8000.', 'Backend Offline');
+        showToast('warning', 'Backend server is unreachable. Operating in offline mode.', 'Offline Mode');
       }
 
       const [statsData, facilitiesData, inspectionsData, complaintsData, inspectorsData] = await Promise.all([
@@ -107,10 +107,10 @@ export function App() {
       setInspectors(inspectorsData);
 
       if (isRefresh) {
-        showToast('info', 'Synchronized operational telemetry with PostgreSQL database');
+        showToast('info', 'Data refreshed successfully.');
       }
     } catch (err) {
-      showToast('error', err.message || 'Could not fetch live telemetry from database.');
+      showToast('error', err.message || 'Could not fetch latest data.');
     } finally {
       setIsLoading(false);
       setIsRefreshing(false);
@@ -128,7 +128,7 @@ export function App() {
       if (facilityFormState.facility) {
         const updated = await api.updateFacility(facilityFormState.facility.id, data);
         setFacilities((prev) => prev.map((f) => (f.id === updated.id ? updated : f)));
-        showToast('success', `Facility ${updated.name} updated in PostgreSQL.`);
+        showToast('success', `Facility ${updated.name} updated successfully.`);
       } else {
         const created = await api.createFacility(data);
         setFacilities((prev) => [created, ...prev]);

@@ -23,7 +23,7 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
               <Building2 size={20} strokeWidth={2.5}/>
             </div>
             {!collapsed && (<div className="brand-title">
-                FacilityOps <span>SaaS</span>
+                FacilityOps
               </div>)}
           </div>
           <button className="btn btn-ghost btn-sm" onClick={onToggleCollapse} style={{ color: 'var(--navy-text-muted)', padding: '0.35rem' }} aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}>
@@ -57,36 +57,30 @@ export function Sidebar({ collapsed, onToggleCollapse, mobileOpen, onCloseMobile
               </>)}
           </button>
 
-          {!collapsed && <div className="nav-section-title" style={{ marginTop: '0.75rem' }}>Ecosystem & Tech</div>}
+          {!collapsed && <div className="nav-section-title" style={{ marginTop: '0.75rem' }}>Modules</div>}
 
-          <button className={`nav-item ${currentPath.startsWith('/angular-inspection') ? 'active' : ''}`} onClick={() => handleNavigate('/angular-inspection')} title="Day 9 Angular Facility Inspection Module">
+          <button className={`nav-item ${currentPath.startsWith('/angular-inspection') ? 'active' : ''}`} onClick={() => handleNavigate('/angular-inspection')} title="Field Inspection Module">
             <Layers size={18}/>
-            {!collapsed && (<>
-                <span>Angular Inspection Hub</span>
-                <span className="nav-item-badge" style={{ backgroundColor: 'rgba(239, 68, 68, 0.2)', color: '#fca5a5' }}>v22</span>
-              </>)}
+            {!collapsed && <span>Field Inspections</span>}
           </button>
         </nav>
 
         <div className="sidebar-footer">
-          {!collapsed ? (<div className="backend-indicator-card">
-              <div className="backend-status-line">
-                <span className={`status-dot ${isOnline ? '' : 'offline'}`}/>
-                <span style={{ color: '#ffffff' }}>
-                  {isOnline ? 'PostgreSQL Live Connected' : 'Database Offline'}
+          {!collapsed ? (
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                <span className={`status-dot ${isOnline ? '' : 'offline'}`} />
+                <span style={{ color: 'var(--navy-text-muted)', fontSize: '0.75rem', fontWeight: 500 }}>
+                  {isOnline ? 'System Operational' : 'Offline Mode'}
                 </span>
               </div>
-              <div className="status-mode-subtext">
-                {isOnline ? 'Database: day8_internship • Port 8000' : 'Run: php artisan serve --port=8000'}
-              </div>
-            </div>) : (<div style={{ display: 'flex', justifyContent: 'center' }}>
-              <span className={`status-dot ${isOnline ? '' : 'offline'}`} title={isOnline ? 'PostgreSQL Live API' : 'Database Offline'}/>
-            </div>)}
-
-          {!collapsed && (<div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--navy-text-muted)', fontSize: '0.6875rem' }}>
-              <ShieldCheck size={14} color="var(--primary-400)"/>
-              <span>Day 10 Final Project</span>
-            </div>)}
+              <span style={{ color: 'var(--navy-text-muted)', fontSize: '0.6875rem', opacity: 0.6 }}>v1.0</span>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <span className={`status-dot ${isOnline ? '' : 'offline'}`} title={isOnline ? 'System Operational' : 'Offline Mode'} />
+            </div>
+          )}
         </div>
       </aside>
     </>);
