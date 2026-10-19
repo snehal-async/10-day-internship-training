@@ -32,6 +32,33 @@ class Inspection extends Model
         ];
     }
 
+    protected $appends = [
+        'inspection_code',
+        'outcome',
+        'findings',
+        'requires_follow_up',
+    ];
+
+    public function getInspectionCodeAttribute(): ?string
+    {
+        return $this->inspection_number;
+    }
+
+    public function getOutcomeAttribute(): ?string
+    {
+        return $this->result;
+    }
+
+    public function getFindingsAttribute(): ?string
+    {
+        return $this->notes;
+    }
+
+    public function getRequiresFollowUpAttribute(): ?bool
+    {
+        return (bool) $this->follow_up_required;
+    }
+
     public function facility(): BelongsTo
     {
         return $this->belongsTo(Facility::class);

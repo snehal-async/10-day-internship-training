@@ -11,6 +11,28 @@ class StoreComplaintRequest extends FormRequest
         return true;
     }
 
+    protected function prepareForValidation(): void
+    {
+        $merge = [];
+        if (! $this->has('ticket_number') || empty($this->input('ticket_number'))) {
+            $merge['ticket_number'] = 'CMP-' . date('Y') . '-' . rand(1000, 9999);
+        }
+
+        if ($this->has('priority') && ! $this->has('severity')) {
+            $priority = strtolower($this->input('priority'));
+            $merge['severity'] = match ($priority) {
+                'urgent', 'critical' => 'urgent',
+                'high' => 'high',
+                'low' => 'low',
+                default => 'medium',
+            };
+        }
+
+        if (! empty($merge)) {
+            $this->merge($merge);
+        }
+    }
+
     public function rules(): array
     {
         return [

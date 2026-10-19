@@ -90,11 +90,15 @@ export function InspectionFormModal({ isOpen, facilities, inspectors, preselecte
             facility_id: Number(facilityId),
             inspector_id: Number(inspectorId),
             inspection_code: inspectionCode,
+            inspection_number: inspectionCode,
             inspection_date: inspectionDate,
             score: Number(score),
             outcome,
+            result: outcome === 'needs_improvement' ? 'conditional_pass' : outcome,
             findings,
+            notes: findings,
             requires_follow_up: requiresFollowUp,
+            follow_up_required: requiresFollowUp,
             follow_up_date: requiresFollowUp ? followUpDate : null,
         });
     }

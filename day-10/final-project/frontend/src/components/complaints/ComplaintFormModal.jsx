@@ -43,11 +43,13 @@ export function ComplaintFormModal({ isOpen, facilities, preselectedFacilityId, 
         e.preventDefault();
         if (!validate())
             return;
+        const normPriority = (priority || 'medium').toLowerCase();
         await onSubmit({
             facility_id: Number(facilityId),
             title,
             category,
-            priority,
+            priority: normPriority,
+            severity: normPriority === 'urgent' || normPriority === 'critical' ? 'urgent' : normPriority,
             reported_by_name: reportedByName,
             description,
         });

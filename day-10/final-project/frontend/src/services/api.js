@@ -181,9 +181,28 @@ export const api = {
   },
 
   async createInspection(data) {
+    const inspectionNum = data.inspection_number || data.inspection_code || `INS-${new Date().getFullYear()}-${Math.floor(100 + Math.random() * 900)}`;
+    const outcome = data.result || data.outcome || 'passed';
+    const result = outcome === 'needs_improvement' ? 'conditional_pass' : outcome;
+
+    const payload = {
+      facility_id: Number(data.facility_id),
+      inspector_id: Number(data.inspector_id || 1),
+      inspection_number: inspectionNum,
+      inspection_code: inspectionNum,
+      inspection_date: data.inspection_date,
+      score: Number(data.score),
+      result: result,
+      outcome: outcome,
+      notes: data.notes || data.findings || '',
+      findings: data.findings || data.notes || '',
+      follow_up_required: Boolean(data.follow_up_required ?? data.requires_follow_up ?? false),
+      follow_up_date: (data.follow_up_required || data.requires_follow_up) ? (data.follow_up_date || null) : null,
+    };
+
     const res = await rawFetch('/inspections', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     return res.data;
   },
@@ -195,9 +214,26 @@ export const api = {
   },
 
   async createComplaint(data) {
+    const ticketNum = data.ticket_number || `CMP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`;
+    const priority = (data.priority || data.severity || 'medium').toLowerCase();
+    const severity = priority === 'urgent' || priority === 'critical' ? 'urgent' : priority;
+
+    const payload = {
+      facility_id: Number(data.facility_id),
+      ticket_number: ticketNum,
+      title: data.title,
+      description: data.description,
+      severity: severity,
+      priority: priority,
+      category: data.category,
+      status: data.status || 'open',
+      reporter_id: data.reporter_id || null,
+      assigned_to_id: data.assigned_to_id || null,
+    };
+
     const res = await rawFetch('/complaints', {
       method: 'POST',
-      body: JSON.stringify(data),
+      body: JSON.stringify(payload),
     });
     return res.data;
   },

@@ -30,6 +30,15 @@ class Complaint extends Model
         ];
     }
 
+    protected $appends = [
+        'priority',
+    ];
+
+    public function getPriorityAttribute(): ?string
+    {
+        return $this->severity;
+    }
+
     public function facility(): BelongsTo
     {
         return $this->belongsTo(Facility::class);
