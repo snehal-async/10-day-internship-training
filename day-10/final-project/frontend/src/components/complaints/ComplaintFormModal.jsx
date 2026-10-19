@@ -1,8 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, AlertTriangle, Save } from 'lucide-react';
 import { animateModalEntrance } from '../../utils/animations';
+import { INITIAL_FACILITIES } from '../../data/seedData';
+
 export function ComplaintFormModal({ isOpen, facilities, preselectedFacilityId, onClose, onSubmit, isLoading, }) {
     const dialogRef = useRef(null);
+    const activeFacilities = (facilities && facilities.length > 0) ? facilities : INITIAL_FACILITIES;
+
     const [facilityId, setFacilityId] = useState(1);
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState('HVAC & Airflow');
@@ -10,9 +14,11 @@ export function ComplaintFormModal({ isOpen, facilities, preselectedFacilityId, 
     const [reportedByName, setReportedByName] = useState('On-Duty Safety Officer');
     const [description, setDescription] = useState('');
     const [errors, setErrors] = useState({});
+
     useEffect(() => {
         if (isOpen) {
-            setFacilityId(preselectedFacilityId || (facilities.length > 0 ? facilities[0].id : 1));
+            const facList = (facilities && facilities.length > 0) ? facilities : INITIAL_FACILITIES;
+            setFacilityId(preselectedFacilityId || (facList.length > 0 ? facList[0].id : 1));
             setTitle('');
             setCategory('HVAC & Airflow');
             setPriority('high');
@@ -89,9 +95,11 @@ export function ComplaintFormModal({ isOpen, facilities, preselectedFacilityId, 
                 Affected Facility Asset *
               </label>
               <select id="comp-facility" required value={facilityId} onChange={(e) => setFacilityId(Number(e.target.value))} className="form-control">
-                {facilities.map((fac) => (<option key={fac.id} value={fac.id}>
+                {activeFacilities.map((fac) => (
+                  <option key={fac.id} value={fac.id}>
                     {fac.name} ({fac.facility_code})
-                  </option>))}
+                  </option>
+                ))}
               </select>
             </div>
 

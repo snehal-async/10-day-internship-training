@@ -19,6 +19,13 @@ import { ComplaintFormModal } from './components/complaints/ComplaintFormModal';
 import { ComplaintDetailModal } from './components/complaints/ComplaintDetailModal';
 import { AngularIntegrationView } from './components/angular-integration/AngularIntegrationView';
 import { EmptyState } from './components/common/EmptyState';
+import {
+  INITIAL_FACILITIES,
+  INITIAL_INSPECTIONS,
+  INITIAL_COMPLAINTS,
+  INITIAL_DASHBOARD_STATS,
+  DEFAULT_INSPECTORS,
+} from './data/seedData';
 
 export function App() {
   const navigate = useNavigate();
@@ -30,12 +37,12 @@ export function App() {
   const [isOnline, setIsOnline] = useState(null);
   const [currentUser, setCurrentUser] = useState(getStoredUser());
 
-  // Master Live Data States (PostgreSQL)
-  const [stats, setStats] = useState(null);
-  const [facilities, setFacilities] = useState([]);
-  const [inspections, setInspections] = useState([]);
-  const [complaints, setComplaints] = useState([]);
-  const [inspectors, setInspectors] = useState([]);
+  // Master Live Data States (PostgreSQL with instant fallback)
+  const [stats, setStats] = useState(INITIAL_DASHBOARD_STATS);
+  const [facilities, setFacilities] = useState(INITIAL_FACILITIES);
+  const [inspections, setInspections] = useState(INITIAL_INSPECTIONS);
+  const [complaints, setComplaints] = useState(INITIAL_COMPLAINTS);
+  const [inspectors, setInspectors] = useState(DEFAULT_INSPECTORS);
 
   // Loading States
   const [isLoading, setIsLoading] = useState(true);
@@ -92,7 +99,7 @@ export function App() {
         showToast('warning', 'Backend server is unreachable. Operating in offline mode.', 'Offline Mode');
       }
 
-      const [statsData, facilitiesData, inspectionsData, complaintsData, inspectorsData] = await Promise.all([
+      const [statsRes, facilitiesRes, inspectionsRes, complaintsRes, inspectorsRes] = await Promise.allSettled([
         api.getDashboardStats(),
         api.getFacilities(),
         api.getInspections(),
@@ -100,11 +107,21 @@ export function App() {
         api.getInspectors(),
       ]);
 
-      setStats(statsData);
-      setFacilities(facilitiesData);
-      setInspections(inspectionsData);
-      setComplaints(complaintsData);
-      setInspectors(inspectorsData);
+      if (statsRes.status === 'fulfilled' && statsRes.value) {
+        setStats(statsRes.value);
+      }
+      if (facilitiesRes.status === 'fulfilled' && Array.isArray(facilitiesRes.value) && facilitiesRes.value.length > 0) {
+        setFacilities(facilitiesRes.value);
+      }
+      if (inspectionsRes.status === 'fulfilled' && Array.isArray(inspectionsRes.value) && inspectionsRes.value.length > 0) {
+        setInspections(inspectionsRes.value);
+      }
+      if (complaintsRes.status === 'fulfilled' && Array.isArray(complaintsRes.value) && complaintsRes.value.length > 0) {
+        setComplaints(complaintsRes.value);
+      }
+      if (inspectorsRes.status === 'fulfilled' && Array.isArray(inspectorsRes.value) && inspectorsRes.value.length > 0) {
+        setInspectors(inspectorsRes.value);
+      }
 
       if (isRefresh) {
         showToast('info', 'Data refreshed successfully.');

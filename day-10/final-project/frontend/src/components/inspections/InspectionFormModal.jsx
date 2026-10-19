@@ -1,8 +1,13 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, ClipboardCheck, Save } from 'lucide-react';
 import { animateModalEntrance } from '../../utils/animations';
+import { INITIAL_FACILITIES, DEFAULT_INSPECTORS } from '../../data/seedData';
+
 export function InspectionFormModal({ isOpen, facilities, inspectors, preselectedFacilityId, onClose, onSubmit, isLoading, }) {
     const dialogRef = useRef(null);
+    const activeFacilities = (facilities && facilities.length > 0) ? facilities : INITIAL_FACILITIES;
+    const activeInspectors = (inspectors && inspectors.length > 0) ? inspectors : DEFAULT_INSPECTORS;
+
     const [facilityId, setFacilityId] = useState(1);
     const [inspectorId, setInspectorId] = useState(1);
     const [inspectionCode, setInspectionCode] = useState('');
@@ -13,11 +18,14 @@ export function InspectionFormModal({ isOpen, facilities, inspectors, preselecte
     const [requiresFollowUp, setRequiresFollowUp] = useState(false);
     const [followUpDate, setFollowUpDate] = useState('');
     const [errors, setErrors] = useState({});
+
     useEffect(() => {
         if (isOpen) {
-            const targetFacId = preselectedFacilityId || (facilities.length > 0 ? facilities[0].id : 1);
+            const facList = (facilities && facilities.length > 0) ? facilities : INITIAL_FACILITIES;
+            const inspList = (inspectors && inspectors.length > 0) ? inspectors : DEFAULT_INSPECTORS;
+            const targetFacId = preselectedFacilityId || (facList.length > 0 ? facList[0].id : 1);
             setFacilityId(targetFacId);
-            setInspectorId(inspectors.length > 0 ? inspectors[0].id : 1);
+            setInspectorId(inspList.length > 0 ? inspList[0].id : 1);
             const randomSuffix = Math.floor(100 + Math.random() * 900);
             setInspectionCode(`INS-${new Date().getFullYear()}-${randomSuffix}`);
             setInspectionDate(new Date().toISOString().split('T')[0]);
@@ -139,9 +147,11 @@ export function InspectionFormModal({ isOpen, facilities, inspectors, preselecte
                   Select Facility Asset *
                 </label>
                 <select id="ins-facility" required value={facilityId} onChange={(e) => setFacilityId(Number(e.target.value))} className="form-control">
-                  {facilities.map((fac) => (<option key={fac.id} value={fac.id}>
+                  {activeFacilities.map((fac) => (
+                    <option key={fac.id} value={fac.id}>
                       {fac.name} ({fac.facility_code}) - {fac.city}
-                    </option>))}
+                    </option>
+                  ))}
                 </select>
                 {errors.facilityId && <span className="form-error">{errors.facilityId}</span>}
               </div>
@@ -151,9 +161,11 @@ export function InspectionFormModal({ isOpen, facilities, inspectors, preselecte
                   Certified Inspector *
                 </label>
                 <select id="ins-inspector" required value={inspectorId} onChange={(e) => setInspectorId(Number(e.target.value))} className="form-control">
-                  {inspectors.map((insp) => (<option key={insp.id} value={insp.id}>
+                  {activeInspectors.map((insp) => (
+                    <option key={insp.id} value={insp.id}>
                       {insp.name} ({insp.email})
-                    </option>))}
+                    </option>
+                  ))}
                 </select>
                 {errors.inspectorId && <span className="form-error">{errors.inspectorId}</span>}
               </div>

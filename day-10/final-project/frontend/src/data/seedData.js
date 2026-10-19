@@ -458,3 +458,14 @@ export const INITIAL_DASHBOARD_STATS = {
         closed: 1,
     },
 };
+
+export const DEFAULT_INSPECTORS = [
+    { id: 1, name: 'Sarah Jenkins', email: 'sarah.admin@enterprise.local', role: 'admin' },
+    { id: 2, name: 'Marcus Vance', email: 'marcus.inspector@enterprise.local', role: 'inspector' },
+    { id: 3, name: 'Elena Rostova', email: 'elena.inspector@enterprise.local', role: 'inspector' },
+    { id: 4, name: 'David Kim', email: 'david.manager@enterprise.local', role: 'manager' },
+    { id: 5, name: 'Amina Al-Mansoor', email: 'amina.staff@enterprise.local', role: 'staff' },
+    { id: 6, name: 'Carlos Mendez', email: 'carlos.technician@enterprise.local', role: 'staff' },
+    { id: 7, name: 'Snehal Solanke', email: 'solankesnehal96k@gmail.com', role: 'inspector' },
+];
+
