@@ -1,7 +1,15 @@
 const defaultBaseUrl = typeof window !== 'undefined' && window.location.hostname === '127.0.0.1'
   ? 'http://127.0.0.1:8000/api'
   : 'http://localhost:8000/api';
-const API_BASE_URL = (import.meta.env.VITE_API_URL || defaultBaseUrl).replace(/\/+$/, '');
+
+let envApiUrl = (import.meta.env.VITE_API_URL || '').trim();
+if (envApiUrl) {
+  envApiUrl = envApiUrl.replace(/\/+$/, '');
+  if (!envApiUrl.endsWith('/api')) {
+    envApiUrl = `${envApiUrl}/api`;
+  }
+}
+const API_BASE_URL = (envApiUrl || defaultBaseUrl).replace(/\/+$/, '');
 const TOKEN_KEY = 'facilityops_d10_token';
 const USER_KEY = 'facilityops_d10_user';
 
