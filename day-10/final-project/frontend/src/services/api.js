@@ -67,8 +67,13 @@ async function rawFetch(endpoint, options = {}) {
     const data = isJson ? await response.json() : null;
 
     if (!response.ok) {
-      const errorMsg =
-        data?.message || `Request failed with status ${response.status} (${response.statusText})`;
+      let errorMsg = data?.message || `Request failed with status ${response.status} (${response.statusText})`;
+      if (data?.errors && typeof data.errors === 'object') {
+        const firstField = Object.keys(data.errors)[0];
+        if (firstField && data.errors[firstField]?.[0]) {
+          errorMsg = data.errors[firstField][0];
+        }
+      }
       throw new ApiError(errorMsg, response.status, data?.errors);
     }
 
@@ -221,6 +226,20 @@ export const api = {
       return res.data;
     }
     throw new ApiError('Authentication token missing from server response', 500);
+  },
+
+  async register({ name, email, password, role = 'staff' }) {
+    const res = await rawFetch('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ name, email, password, role }),
+    });
+
+    if (res.data?.token) {
+      setStoredToken(res.data.token);
+      setStoredUser(res.data.user);
+      return res.data;
+    }
+    throw new ApiError('Registration token missing from server response', 500);
   },
 
   async logout() {
