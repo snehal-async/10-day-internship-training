@@ -1,0 +1,8 @@
+{
+  "name": "facilityops-workspace",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "cd day-10/final-project/frontend && npm install && npm run build"
+  }
+}
